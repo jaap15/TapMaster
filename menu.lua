@@ -38,7 +38,7 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
     menutext = display.newText("Main Menu", display.contentCenterX, display.contentCenterY-(display.contentCenterY*0.75))
     authors = display.newText("by Daniel Burris and Jairo Arreola", display.contentCenterX, display.contentCenterY+(display.contentCenterY/1.2))
-    startButton = widget.newButton({    
+    local startButton = widget.newButton({    
             id = "startButton",
             label = "Start",    
             width = 100,
@@ -48,7 +48,7 @@ function scene:create( event )
             onEvent = startButtonEvent 
         } )   
 
-    settingsButton = widget.newButton({    
+    local settingsButton = widget.newButton({    
             id = "settingsButton",
             label = "Settings",    
             width = 100,
@@ -57,9 +57,6 @@ function scene:create( event )
             defaultFile = "images/button.png",
             onEvent = settingsButtonEvent 
         } )   
-
-    print(minValue)
-    print(maxValue)
 
     authors.x = display.contentCenterX
     authors.y = display.contentCenterY+(display.contentCenterY/1.2)
@@ -83,6 +80,8 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
+    print(minValue)
+    print(maxValue)
 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen

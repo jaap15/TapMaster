@@ -29,6 +29,12 @@ function startGame()
     print("TEST!")
 end
 
+local function returnButtonEvent(event)
+    if ("ended" == event.phase) then
+        composer.gotoScene("game")
+    end
+end
+
 function updateTime()
     if (secondsLeft > 0) then
         secondsLeft = secondsLeft - 1

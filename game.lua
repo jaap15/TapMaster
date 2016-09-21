@@ -11,22 +11,38 @@ local scene = composer.newScene()
 
 local widget = require("widget")
 
-local secondsLeft = 0
-local delayTime
+local secondsLeft = 4
+delayTime = 0
+correctTaps = 0
+incorrectTaps = 0
+
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- ----------------------------------------------------------------------------------
+function updateScoreBoard()
+    scoreText.text = string.format("CorrectTaps: %01d  IncorrectTaps: %01d", correctTaps, incorrectTaps)
+end
+
 local function readyButtonEvent(event)
     if ("ended" == event.phase) then
-        secondsLeft = 4   
         sceneGroup:remove( readyButton )
+        timer.performWithDelay( 1000, updateTime, 5 )
     end
 end
 
 function startGame()
-    print("TEST!")
+    sceneToGo = math.random( 1, 2)
+    updateScoreBoard()
+    print("Scene to go to is : " .. sceneToGo)
+
+    if(sceneToGo == 1) then
+        composer.gotoScene("correctTapScene")
+    else
+        composer.gotoScene("incorrectTapScene")
+    end
+
 end
 
 local function returnButtonEvent(event)
@@ -39,11 +55,16 @@ function updateTime()
     if (secondsLeft > 0) then
         secondsLeft = secondsLeft - 1
         timeDisplay = string.format("%01d", secondsLeft)
+        timerText.text = timeDisplay
     else
-        secondsLeft = 0
-        --sceneGroup:remove(timerText)
+        sceneGroup:remove(timerText)
+        startGame()
     end
-    timerText.text = timeDisplay
+end
+
+function generateDelay()
+    delayTime = math.random( minValue, maxValue)
+    print("The delay generated: " .. delayTime)
 end
 
 -- -----------------------------------------------------------------------------------
@@ -79,6 +100,14 @@ function scene:create( event )
     readyButton.y = display.contentCenterY
 
     sceneGroup:insert( readyButton )
+
+    scoreText = display.newText(" ", 0, 0, native.systemFont)
+    scoreText:setTextColor(235, 235, 235)
+
+    -- Positioning the timer object
+    scoreText.x = display.contentCenterX   
+    scoreText.y = display.contentCenterY-(display.contentCenterY*1.10)
+
 end
 
 -- show()
@@ -89,10 +118,8 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
-        countDownTimer = timer.performWithDelay( 1000, updateTime, secondsLeft )
     end
 end
 
@@ -108,7 +135,7 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
-
+        composer.removeScene("game")
     end
 end
 

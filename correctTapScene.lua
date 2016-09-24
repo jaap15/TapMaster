@@ -15,28 +15,51 @@ local widget = require("widget")
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- ----------------------------------------------------------------------------------
-local function exitToMenu(event)
-    composer.gotoScene("menu")
+local tapImage;
+local isTappedBefore = false;
+local is2SecondsUp = false;
+local reactionTimer;
+local Time = 0;
+
+local function calcReactionTime()
+    avgReactionTime = 0;
+    for key,times in pairs(reactionTimes) do
+        avgReactionTime = avgReactionTime + times;
+    end
+    avgReactionTime = avgReactionTime/correctTaps;
+end
+
+local function tickInMs()
+    Time = Time + 1;
 end
 
 local function tapped()
-    correctTaps = correctTaps + 1
-    updateScoreBoard()
-    if(correctTaps + incorrectTaps == 10) then
-        correctTaps = 0
-        incorrectTaps = 0
-        scoreText.text = " "
-        native.showAlert("Alert!", "Congratulations", {"Exit to Menu"}, exitToMenu)
-    else
-        composer.gotoScene("incorrectTapScene")
+    if(is2SecondsUp == false) then
+        timer.pause( reactionTimer )
+        isTappedBefore = true;
+        correctTaps = correctTaps + 1
+        reactionTimes[correctTaps] = Time
+        updateScoreBoard()
+        calcReactionTime()
+        checkRoundsComplete("incorrectTapScene")
+    end
+end
+
+local function timedOut( )
+    is2SecondsUp = true;
+    if(isTappedBefore == false) then
+        incorrectTaps = incorrectTaps + 1
+        updateScoreBoard()
+        checkRoundsComplete("incorrectTapScene")
     end
 end
 
 local function generateCorrectTap()
-    local tapImage = display.newRect( display.contentCenterX, display.contentCenterY, 200, 200)
-    tapImage:setFillColor( 0, 0, 1 )
+    Time = 0;
+    timer.resume( reactionTimer )
     tapImage:addEventListener( "tap", tapped)
-    sceneGroup:insert( tapImage)
+    tapImage.isVisible = true;
+    timer.performWithDelay( 2000, timedOut, 1)
 end
 
 -- -----------------------------------------------------------------------------------
@@ -48,7 +71,10 @@ function scene:create( event )
 
     sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
-    generateDelay()
+    tapImage = display.newRect( display.contentCenterX, display.contentCenterY, 200, 200)
+    tapImage:setFillColor( 0, 0, 1 )
+    sceneGroup:insert( tapImage)
+    reactionTimer = timer.performWithDelay( 1, tickInMs, -1)
 
 end
 
@@ -60,6 +86,11 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
+        generateDelay()
+        tapImage.isVisible = false;
+        isTappedBefore = false;
+        is2SecondsUp = false;
+        timer.pause( reactionTimer );
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
         timer.performWithDelay( delayTime, generateCorrectTap, 1)
@@ -79,7 +110,8 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
-        composer.removeScene("correctTapScene")
+        -- composer.removeScene("correctTapScene")
+        tapImage:removeEventListener( "tap", tapped)
     end
 end
 

@@ -80,8 +80,11 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-    print(minValue)
-    print(maxValue)
+        composer.removeScene("game")
+        composer.removeScene("correctTapScene")
+        composer.removeScene("incorrectTapScene")
+        print(minValue)
+        print(maxValue)
 
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
@@ -101,7 +104,7 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
-        composer.removeScene("menu")
+        -- composer.removeScene("menu")
     end
 end
 

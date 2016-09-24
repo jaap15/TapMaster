@@ -15,14 +15,29 @@ local secondsLeft = 4
 delayTime = 0
 correctTaps = 0
 incorrectTaps = 0
-
+reactionTimes = {}
+avgReactionTime = 0;
 
 -- -----------------------------------------------------------------------------------
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- ----------------------------------------------------------------------------------
+function exitToMenu(event)
+    composer.gotoScene("menu")
+end
+function checkRoundsComplete(nameOfScene)
+    if(correctTaps + incorrectTaps == 10) then
+        correctTaps = 0
+        incorrectTaps = 0
+        scoreText.text = " "
+        native.showAlert("Alert!", "Congratulations", {"Exit to Menu"}, exitToMenu)
+    else
+        composer.gotoScene(nameOfScene)
+    end
+end
+
 function updateScoreBoard()
-    scoreText.text = string.format("CorrectTaps: %01d  IncorrectTaps: %01d", correctTaps, incorrectTaps)
+    scoreText.text = string.format("CorrectTaps: %01d  IncorrectTaps: %01d\nAvgCorrectTapResponse: %01d Ms", correctTaps, incorrectTaps, avgReactionTime)
 end
 
 local function readyButtonEvent(event)
@@ -135,7 +150,6 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
-        composer.removeScene("game")
     end
 end
 

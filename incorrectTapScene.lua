@@ -1,14 +1,12 @@
 -----------------------------------------------------------------------------------------
 --
--- settings.lua
+-- incorrectTapScene.lua
 --
+-- Authors: Daniel Burris and Jairo Arreola
 -----------------------------------------------------------------------------------------
 
--- Your code here
-local composer = require( "composer" )
-
+local composer = require("composer")
 local scene = composer.newScene()
-
 local widget = require("widget")
 
 -- -----------------------------------------------------------------------------------
@@ -19,6 +17,11 @@ local tapImage;
 local isTappedBefore = false;
 local is2SecondsUp = false;
 
+-- tapped()
+--      input: none
+--      output: none
+--
+--      ...
 local function tapped()
     if(is2SecondsUp == false) then
         isTappedBefore = true;
@@ -28,6 +31,11 @@ local function tapped()
     end
 end
 
+-- timedOut()
+--      input: none
+--      output: none
+--
+--      ...
 local function timedOut( )
     is2SecondsUp = true;
     if(not isTappedBefore) then
@@ -37,6 +45,11 @@ local function timedOut( )
     end
 end
 
+-- generateIncorrectTap()
+--      input: none
+--      output: none
+--
+--      ...
 function generateIncorrectTap()
     tapImage:addEventListener( "tap", tapped)
     tapImage.isVisible = true;
@@ -48,6 +61,10 @@ end
 -- -----------------------------------------------------------------------------------
 
 -- create()
+--      input: none
+--      output: none
+--
+--      ...
 function scene:create( event )
 
     sceneGroup = self.view
@@ -58,6 +75,10 @@ function scene:create( event )
 end
 
 -- show()
+--      input: none
+--      output: none
+--
+--      ...
 function scene:show( event )
 
     local sceneGroup = self.view
@@ -78,6 +99,10 @@ end
 
 
 -- hide()
+--      input: none
+--      output: none
+--
+--      ...
 function scene:hide( event )
 
     local sceneGroup = self.view
@@ -95,6 +120,10 @@ end
 
 
 -- destroy()
+--      input: none
+--      output: none
+--
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:destroy( event )
 
     local sceneGroup = self.view

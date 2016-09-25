@@ -1,17 +1,19 @@
 -----------------------------------------------------------------------------------------
 --
--- settings.lua
+-- game.lua
 --
+-- Authors: Daniel Burris and Jairo Arreola
 -----------------------------------------------------------------------------------------
 
--- Your code here
-local composer = require( "composer" )
-
+local composer = require("composer")
 local scene = composer.newScene()
-
 local widget = require("widget")
 
+-- Local variable used to start the countdown timer, its set to countdowntimerValue + 1
+-- so that the countdown timer is between 3 < x < 3.99 instead of 2 < x < 2.99
 local secondsLeft = 4
+
+-- Global Variables
 delayTime = 0
 correctTaps = 0
 incorrectTaps = 0
@@ -22,9 +24,21 @@ avgReactionTime = 0;
 -- Code outside of the scene event functions below will only be executed ONCE unless
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- ----------------------------------------------------------------------------------
+
+-- exitToMenu()
+--      input: none
+--      output: none
+--
+--      This function just switches us back to the menu scene
 function exitToMenu(event)
     composer.gotoScene("menu")
 end
+
+-- checkRoundsComplete()
+--      input: nameOfScene
+--      output: none
+--
+--      ...
 function checkRoundsComplete(nameOfScene)
     if(correctTaps + incorrectTaps == 10) then
         correctTaps = 0
@@ -36,10 +50,21 @@ function checkRoundsComplete(nameOfScene)
     end
 end
 
+-- updateScoreBoard()
+--      input: none
+--      output: none
+--
+--      ...
 function updateScoreBoard()
     scoreText.text = string.format("CorrectTaps: %01d  IncorrectTaps: %01d\nAvgCorrectTapResponse: %01d Ms", correctTaps, incorrectTaps, avgReactionTime)
 end
 
+-- readyButtonEvent()
+--      input: none
+--      output: none
+--
+--      This function destroys the "I'm Ready" button and begins the countdown timer
+--      which lauches us into the game
 local function readyButtonEvent(event)
     if ("ended" == event.phase) then
         sceneGroup:remove( readyButton )
@@ -47,6 +72,11 @@ local function readyButtonEvent(event)
     end
 end
 
+-- startGame()
+--      input: none
+--      output: none
+--
+--      ...
 function startGame()
     sceneToGo = math.random( 1, 2)
     updateScoreBoard()
@@ -60,12 +90,23 @@ function startGame()
 
 end
 
+-- returnButtonEvent()
+--      input: none
+--      output: none
+--
+--      This function just switches from the menu scene to the game scene
 local function returnButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("game")
     end
 end
 
+
+-- updateTime()
+--      input: none
+--      output: none
+--
+--      ...
 function updateTime()
     if (secondsLeft > 0) then
         secondsLeft = secondsLeft - 1
@@ -77,6 +118,11 @@ function updateTime()
     end
 end
 
+-- generateDelay()
+--      input: none
+--      output: none
+--
+--      ...
 function generateDelay()
     delayTime = math.random( minValue, maxValue)
     print("The delay generated: " .. delayTime)
@@ -87,19 +133,26 @@ end
 -- -----------------------------------------------------------------------------------
 
 -- create()
+--      input: none
+--      output: none
+--
+--      This function creates all the objects that will be used in the scene and adds
+--      them to the scene group.
 function scene:create( event )
 
     sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
+
+    -- This is the countdown timer text seen after pressing the ready button at the beginning
     timerText = display.newText(" ", 0, 0, native.systemFont)
     timerText:setTextColor(235, 235, 235)
 
-    -- Positioning the timer object
-    timerText.x = display.contentCenterX     
-    timerText.y = display.contentCenterY
-    sceneGroup:insert( timerText )
+    -- This is the text that represents the score to the player
+    scoreText = display.newText(" ", 0, 0, native.systemFont)
+    scoreText:setTextColor(235, 235, 235)
 
-
+    -- Creating a button widget, this begins the countdown timer that launches the user
+    -- into the game
     readyButton = widget.newButton({    
             id = "readyButton",
             label = "I'm Ready",    
@@ -110,22 +163,24 @@ function scene:create( event )
             onEvent = readyButtonEvent 
         } )   
 
-
+    -- Positioning all objects on the scene
+    timerText.x = display.contentCenterX     
+    timerText.y = display.contentCenterY
+    scoreText.x = display.contentCenterX   
+    scoreText.y = display.contentCenterY-(display.contentCenterY*1.10)
     readyButton.x = display.contentCenterX
     readyButton.y = display.contentCenterY
 
+    -- Adding all objects to the scene group
+    sceneGroup:insert( timerText )
     sceneGroup:insert( readyButton )
-
-    scoreText = display.newText(" ", 0, 0, native.systemFont)
-    scoreText:setTextColor(235, 235, 235)
-
-    -- Positioning the timer object
-    scoreText.x = display.contentCenterX   
-    scoreText.y = display.contentCenterY-(display.contentCenterY*1.10)
-
 end
 
 -- show()
+--      input: none
+--      output: none
+--
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:show( event )
 
     local sceneGroup = self.view
@@ -140,6 +195,10 @@ end
 
 
 -- hide()
+--      input: none
+--      output: none
+--
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:hide( event )
 
     local sceneGroup = self.view
@@ -155,13 +214,16 @@ end
 
 
 -- destroy()
+--      input: none
+--      output: none
+--
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:destroy( event )
 
     local sceneGroup = self.view
     -- Code here runs prior to the removal of scene's view
 
 end
-
 
 -- -----------------------------------------------------------------------------------
 -- Scene event function listeners

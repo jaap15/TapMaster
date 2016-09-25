@@ -1,14 +1,12 @@
 -----------------------------------------------------------------------------------------
 --
--- settings.lua
+-- correctTapScene.lua
 --
+-- Authors: Daniel Burris and Jairo Arreola
 -----------------------------------------------------------------------------------------
 
--- Your code here
-local composer = require( "composer" )
-
+local composer = require("composer")
 local scene = composer.newScene()
-
 local widget = require("widget")
 
 -- -----------------------------------------------------------------------------------
@@ -21,6 +19,11 @@ local is2SecondsUp = false;
 local reactionTimer;
 local Time = 0;
 
+-- calcReactionTime()
+--      input: none
+--      output: none
+--
+--      ...
 local function calcReactionTime()
     avgReactionTime = 0;
     for key,times in pairs(reactionTimes) do
@@ -29,10 +32,20 @@ local function calcReactionTime()
     avgReactionTime = avgReactionTime/correctTaps;
 end
 
+-- tickInMs()
+--      input: none
+--      output: none
+--
+--      ...
 local function tickInMs()
     Time = Time + 1;
 end
 
+-- tapped()
+--      input: none
+--      output: none
+--
+--      ...
 local function tapped()
     if(is2SecondsUp == false) then
         timer.pause( reactionTimer )
@@ -45,6 +58,11 @@ local function tapped()
     end
 end
 
+-- timedOut()
+--      input: none
+--      output: none
+--
+--      ...
 local function timedOut( )
     is2SecondsUp = true;
     if(isTappedBefore == false) then
@@ -54,6 +72,11 @@ local function timedOut( )
     end
 end
 
+-- generateCorrectTap()
+--      input: none
+--      output: none
+--
+--      ...
 local function generateCorrectTap()
     Time = 0;
     timer.resume( reactionTimer )
@@ -67,6 +90,10 @@ end
 -- -----------------------------------------------------------------------------------
 
 -- create()
+--      input: none
+--      output: none
+--
+--      ...
 function scene:create( event )
 
     sceneGroup = self.view
@@ -79,6 +106,10 @@ function scene:create( event )
 end
 
 -- show()
+--      input: none
+--      output: none
+--
+--      ...
 function scene:show( event )
 
     local sceneGroup = self.view
@@ -100,6 +131,10 @@ end
 
 
 -- hide()
+--      input: none
+--      output: none
+--
+--      ...
 function scene:hide( event )
 
     local sceneGroup = self.view
@@ -117,6 +152,10 @@ end
 
 
 -- destroy()
+--      input: none
+--      output: none
+--
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:destroy( event )
 
     local sceneGroup = self.view

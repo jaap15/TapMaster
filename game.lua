@@ -41,10 +41,10 @@ end
 --      ...
 function checkRoundsComplete(nameOfScene)
     if(correctTaps + incorrectTaps == 10) then
+        native.showAlert("Congratulations!", string.format("CorrectTaps %01d \n IncorrectTaps %01d \n AvgResponseTime: %01d", correctTaps, incorrectTaps, avgReactionTime), {"Exit to Menu"}, exitToMenu)
         correctTaps = 0
         incorrectTaps = 0
         scoreText.text = " "
-        native.showAlert("Alert!", "Congratulations", {"Exit to Menu"}, exitToMenu)
     else
         composer.gotoScene(nameOfScene)
     end

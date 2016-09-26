@@ -16,6 +16,7 @@ local widget = require("widget")
 local tapImage;
 local isTappedBefore = false;
 local is2SecondsUp = false;
+local Timer2Seconds;
 
 -- tapped()
 --      input: none
@@ -53,7 +54,7 @@ end
 function generateIncorrectTap()
     tapImage:addEventListener( "tap", tapped)
     tapImage.isVisible = true;
-    timer.performWithDelay( 2000, timedOut, 1)
+    Timer2Seconds = timer.performWithDelay( 2000, timedOut, 1)
 end
 
 -- -----------------------------------------------------------------------------------
@@ -115,6 +116,7 @@ function scene:hide( event )
         -- Code here runs immediately after the scene goes entirely off screen
         -- composer.removeScene("incorrectTapScene")
         tapImage:removeEventListener( "tap", tapped)
+        timer.cancel( Timer2Seconds )
     end
 end
 

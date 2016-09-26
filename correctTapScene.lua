@@ -18,6 +18,7 @@ local isTappedBefore = false;
 local is2SecondsUp = false;
 local reactionTimer;
 local Time = 0;
+local Timer2Seconds;
 
 -- calcReactionTime()
 --      input: none
@@ -82,7 +83,7 @@ local function generateCorrectTap()
     timer.resume( reactionTimer )
     tapImage:addEventListener( "tap", tapped)
     tapImage.isVisible = true;
-    timer.performWithDelay( 2000, timedOut, 1)
+    Timer2Seconds = timer.performWithDelay( 2000, timedOut, 1)
 end
 
 -- -----------------------------------------------------------------------------------
@@ -147,6 +148,7 @@ function scene:hide( event )
         -- Code here runs immediately after the scene goes entirely off screen
         -- composer.removeScene("correctTapScene")
         tapImage:removeEventListener( "tap", tapped)
+        timer.cancel( Timer2Seconds )
     end
 end
 

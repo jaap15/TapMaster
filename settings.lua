@@ -19,10 +19,13 @@ local widget = require("widget")
 --      
 --      This function just switches from the settings scene to the menu scene
 --  	It only allows you to return to the menu if you have legal values for
---  	minValue and maxValue
+--  	minValue and maxValue. It will throw an alert if you try to return
+--		with illegal values.
 local function returnButtonEvent(event)
 	if ("ended" == event.phase and minValue<=maxValue) then
 		composer.gotoScene("menu")
+	elseif("ended" == event.phase and minValue>maxValue) then
+		native.showAlert("Error", "Min interval cannot be less then max interval")
 	end
 end
 

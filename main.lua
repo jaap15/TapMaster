@@ -19,8 +19,7 @@ local composer = require("composer")
 
 -- Global Variables, used in all scenes. Interval of box spawns.
 minValue = 500
--- FIXFIX
-maxValue = 500
+maxValue = 5000
 
 -- Default code, hiding the status bar
 display.setStatusBar(display.HiddenStatusBar)

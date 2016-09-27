@@ -22,7 +22,9 @@ local Timer2Seconds;
 --      input: none
 --      output: none
 --
---      ...
+--      This function is associated with the event listener "tap". If the tapImage 
+--      object is tapped (this is the red box scene), the incorrectTaps is incremented,
+--      we update the scoreboard, and push into the next scene.
 local function tapped()
     if(is2SecondsUp == false) then
         isTappedBefore = true;
@@ -36,7 +38,9 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This function is called two seconds after the box is generated. If the box has
+--      not been tapped (this is the red box scene), the correctTaps is incremented,
+--      we update the scoreboard, and push into the next scene.
 local function timedOut( )
     is2SecondsUp = true;
     if(not isTappedBefore) then
@@ -50,7 +54,9 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This function generates the red box and applies a "tap" event listener to it.
+--      It also calls the timedOut() function in 2 seconds. The tapped() and timedOut()
+--      events add all functionality to the boxes.      
 function generateIncorrectTap()
     tapImage:addEventListener( "tap", tapped)
     tapImage.isVisible = true;
@@ -65,13 +71,15 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This function creates the tapImage and colors it red and adds it to the sceneGroup.
+--      This box is not destroyed, rather it is hidden during scene swapping and has its
+--      event listener removed when it is hidden.
 function scene:create( event )
 
     sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
     tapImage = display.newRect( display.contentCenterX, display.contentCenterY, 200, 200)
-    tapImage:setFillColor( 1, 0, 0 )
+    tapImage:setFillColor( 1, 0, 0 ) -- red
     sceneGroup:insert( tapImage)
 end
 
@@ -79,7 +87,10 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This function is called when we swap to this scene. At this point the tapImage has been
+--      created and added to the sceneGroup. Everytime we swap to this scene after creation, we
+--      generate our Delay, make sure our tapImage is hidden, and all local variables are reset.
+--      After delayTime seconds, we generate our red box. 
 function scene:show( event )
 
     local sceneGroup = self.view
@@ -103,7 +114,8 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This function removes all active event listeners and timers to ensure that none of 
+--      these events trigger if the scene is left before they can trigger.
 function scene:hide( event )
 
     local sceneGroup = self.view
@@ -114,7 +126,9 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
-        -- composer.removeScene("incorrectTapScene")
+
+        -- When we leave the scene, we no longer need an event listener for the tapImage,
+        -- we also don't want the timer to timeOut if the scene is left prior to 2 seconds.
         tapImage:removeEventListener( "tap", tapped)
         timer.cancel( Timer2Seconds )
     end

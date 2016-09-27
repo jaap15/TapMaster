@@ -38,7 +38,9 @@ end
 --      input: nameOfScene
 --      output: none
 --
---      ...
+--      This global function checks to see how many rounds have been completed. If we have completed
+--      10 rounds, we show the player his results and reset the global variables. If not, we move
+--      onto the next nameOfScene.
 function checkRoundsComplete(nameOfScene)
     if(correctTaps + incorrectTaps == 10) then
         native.showAlert("Congratulations!", string.format("CorrectTaps %01d \n IncorrectTaps %01d \n AvgResponseTime: %01d", correctTaps, incorrectTaps, avgReactionTime), {"Exit to Menu"}, exitToMenu)
@@ -54,7 +56,8 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This global function updated the score board shown at the top of the game scene. It is 
+--      updated with simple string.format functionality.
 function updateScoreBoard()
     scoreText.text = string.format("CorrectTaps: %01d  IncorrectTaps: %01d\nAvgCorrectTapResponse: %01d Ms", correctTaps, incorrectTaps, avgReactionTime)
 end
@@ -76,11 +79,11 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This function displays the score board, randomly picks the first scene we go to and
+--      pushes us to the first scene. 
 function startGame()
     sceneToGo = math.random( 1, 2)
     updateScoreBoard()
-    print("Scene to go to is : " .. sceneToGo)
 
     if(sceneToGo == 1) then
         composer.gotoScene("correctTapScene")
@@ -106,7 +109,9 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This function is our 3 second countdown timer. It is called every second and updates
+--      the text in the middle of the scene when secondsLeft is above 0. When there is no time left
+--      we start the game by calling startGame().
 function updateTime()
     if (secondsLeft > 0) then
         secondsLeft = secondsLeft - 1
@@ -122,10 +127,9 @@ end
 --      input: none
 --      output: none
 --
---      ...
+--      This global function generates a random delay between global variables minValue and maxValue
 function generateDelay()
     delayTime = math.random( minValue, maxValue)
-    print("The delay generated: " .. delayTime)
 end
 
 -- -----------------------------------------------------------------------------------

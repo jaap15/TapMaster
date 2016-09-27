@@ -11,7 +11,9 @@
 -- most scenes. The show scene is used when we need code that will loop while the scene is 
 -- open. The hide and destroy functions are mostly unused. The game is built around scene
 -- swapping. Based on a random generator, boxes associated with each scene will be
--- presented to the user and based on his actions the scenes will be swapped. 
+-- presented to the user and based on his actions the scenes will be swapped. Each scene
+-- (correctTapScene & incorrectTapScene) have functions that generateDelay(), addEventListeners,
+-- start a avgResponseTimer, and check if 2 seconds have passed. 
 -----------------------------------------------------------------------------------------
 
 -- Composer object is used for the creation and manipulation of scenes

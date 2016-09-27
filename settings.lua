@@ -13,7 +13,7 @@ local widget = require("widget")
 -- the scene is removed entirely (not recycled) via "composer.removeScene()"
 -- -----------------------------------------------------------------------------------
 
--- settingsButtonEvent()
+-- returnButtonEvent()
 --      input: none
 --      output: none
 --      

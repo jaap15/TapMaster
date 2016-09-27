@@ -64,8 +64,9 @@ end
 --      This function is associated with the event listener "tap". If the tapImage 
 --      object is tapped (this is the blue box scene), the correctTaps is incremented,
 --      we update the scoreboard, and push into the next scene. We also calculate the
---      reactionTimer from the player. 
+--      reactionTimer from the player. It also produces the camera snap sound.
 local function tapped()
+    audio.play(cameraSound, {loops = 0})
     if(is2SecondsUp == false) then
         timer.pause( reactionTimer )
         isTappedBefore = true;
@@ -124,9 +125,21 @@ function scene:create( event )
 
     sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
-    tapImage = display.newRect( display.contentCenterX, display.contentCenterY, 200, 200)
-    tapImage:setFillColor( 0, 0, 1 ) -- blue
+    --tapImage = display.newRect( display.contentCenterX, display.contentCenterY, 200, 200)
+    cameraOverlay = display.newImage("images/camera.png")
+    cameraOverlay.x = display.contentCenterX
+    cameraOverlay.y = display.contentCenterY
+    cameraOverlay.width = 300
+    cameraOverlay.height = 300
+
+    tapImage = display.newImage("images/diglet.png")
+    tapImage.x = display.contentCenterX
+    tapImage.y = display.contentCenterY
+    --tapImage:setFillColor( 0, 0, 1 ) -- blue
+
+    -- Adding all objects to the scene group
     sceneGroup:insert( tapImage)
+    sceneGroup:insert(cameraOverlay)
 
     -- reactionTimer is defined, every millisecond it calls tickinMs(). The -1 parameter 
     -- makes it loop forever. 

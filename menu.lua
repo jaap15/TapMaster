@@ -41,6 +41,17 @@ local function settingsButtonEvent(event)
 	end
 end
 
+-- helpButtonEvent()
+--      input: none
+--      output: none
+--      
+--      This function just switches from the menu scene to the settings scene
+local function helpButtonEvent(event)
+    if ("ended" == event.phase) then
+        composer.gotoScene("help")
+    end
+end
+
 -- -----------------------------------------------------------------------------------
 -- Scene event functions
 -- -----------------------------------------------------------------------------------
@@ -57,9 +68,15 @@ function scene:create( event )
     -- Code here runs when the scene is first created but has not yet appeared on screen
 
     -- Game Title / Image
-    local menuImage = display.newImage("images/menu.jpg")
-    menuImage.width = 200
-    menuImage.height = 50
+    local menuTitle = display.newImage("images/menuTitle.png")
+    menuTitle.width = 300
+    menuTitle.height = 100    
+
+    -- Game Background
+    local menuBG = display.newImage("images/menuBG.jpg")
+    menuBG.width = display.contentWidth
+    menuBG.height = display.pixelWidth    
+    menuBG:setFillColor(1,1,1,0.5)
 
     -- Text to display developers of the game
     authors = display.newText("by Daniel Burris and Jairo Arreola", display.contentCenterX, display.contentCenterY+(display.contentCenterY/1.2))
@@ -86,21 +103,38 @@ function scene:create( event )
             onEvent = settingsButtonEvent 
         } )   
 
+    -- Creating the help button, sends us from the menu scene to the help scene
+    local helpButton = widget.newButton({    
+            id = "helpButton",
+            label = "Help",    
+            width = 100,
+            height = 20,
+            fontSize = 10,
+            defaultFile = "images/button.png",
+            onEvent = helpButtonEvent 
+        } )  
+
     -- Positioning all objects on the scene
-    menuImage.x = display.contentCenterX
-    menuImage.y = display.contentCenterY-(display.contentCenterY*0.75)
+    menuTitle.x = display.contentCenterX
+    menuTitle.y = display.contentCenterY-(display.contentCenterY*0.75)
+    menuBG.x = display.contentCenterX
+    menuBG.y = display.contentCenterY  
     authors.x = display.contentCenterX
     authors.y = display.contentCenterY+(display.contentCenterY/1.2)
-    startButton.x = display.contentCenterX-70.0
-    startButton.y = display.contentCenterY+(display.contentCenterY/1.5)
+    startButton.x = display.contentCenterX
+    startButton.y = display.contentCenterY+(display.contentCenterY/1.9)
+    helpButton.x = display.contentCenterX-70.0
+    helpButton.y = display.contentCenterY+(display.contentCenterY/1.5)
     settingsButton.x = display.contentCenterX+70.0
     settingsButton.y = display.contentCenterY+(display.contentCenterY/1.5)
 
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
-    sceneGroup:insert( menuImage )
+    menuBG:toBack()
+    sceneGroup:insert( menuTitle )
     sceneGroup:insert( authors )
     sceneGroup:insert( startButton )
+    sceneGroup:insert( helpButton )
     sceneGroup:insert( settingsButton )
 end
 

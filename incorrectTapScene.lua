@@ -24,8 +24,10 @@ local Timer2Seconds;
 --
 --      This function is associated with the event listener "tap". If the tapImage 
 --      object is tapped (this is the red box scene), the incorrectTaps is incremented,
---      we update the scoreboard, and push into the next scene.
+--      we update the scoreboard, and push into the next scene. It also produces the 
+--      camera snap sound.
 local function tapped()
+    audio.play(cameraSound, {loops = 0})
     if(is2SecondsUp == false) then
         isTappedBefore = true;
         incorrectTaps = incorrectTaps + 1
@@ -78,9 +80,20 @@ function scene:create( event )
 
     sceneGroup = self.view
     -- Code here runs when the scene is first created but has not yet appeared on screen
-    tapImage = display.newRect( display.contentCenterX, display.contentCenterY, 200, 200)
-    tapImage:setFillColor( 1, 0, 0 ) -- red
+    --tapImage = display.newRect( display.contentCenterX, display.contentCenterY, 200, 200)
+    cameraOverlay = display.newImage("images/camera.png")
+    cameraOverlay.x = display.contentCenterX
+    cameraOverlay.y = display.contentCenterY
+    cameraOverlay.width = 300
+    cameraOverlay.height = 300
+
+    tapImage = display.newImage("images/voltorb.png")
+    tapImage.x = display.contentCenterX
+    tapImage.y = display.contentCenterY
+    --tapImage:setFillColor( 1, 0, 0 ) -- red
+
     sceneGroup:insert( tapImage)
+    sceneGroup:insert(cameraOverlay)
 end
 
 -- show()

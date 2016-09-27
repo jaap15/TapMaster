@@ -151,6 +151,9 @@ function scene:create( event )
     timerText = display.newText(" ", 0, 0, native.systemFont)
     timerText:setTextColor(235, 235, 235)
 
+    -- Loading Camera sound audio
+    cameraSound = audio.loadStream( "sounds/camera.mp3" )
+
     -- This is the text that represents the score to the player
     scoreText = display.newText(" ", 0, 0, native.systemFont)
     scoreText:setTextColor(235, 235, 235)

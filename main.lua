@@ -23,6 +23,10 @@ local composer = require("composer")
 minValue = 500
 maxValue = 5000
 
+-- Global music
+local themeSong = audio.loadStream("sounds/pokeSnapTheme.mp3")
+audio.play(themeSong, {loops = -1})
+
 -- Default code, hiding the status bar
 display.setStatusBar(display.HiddenStatusBar)
 

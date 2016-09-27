@@ -18,15 +18,10 @@ local widget = require("widget")
 --      input: none
 --      output: none
 --      
---      This function just switches from the settings scene to the menu scene
---      It only allows you to return to the menu if you have legal values for
---      minValue and maxValue. It will throw an alert if you try to return
---      with illegal values.
+--      This function just switches from the help scene to the menu scene
 local function returnButtonEvent(event)
-    if ("ended" == event.phase and minValue<=maxValue) then
+    if ("ended" == event.phase) then
         composer.gotoScene("menu")
-    elseif("ended" == event.phase and minValue>maxValue) then
-        native.showAlert("Error", "Min interval cannot be less then max interval")
     end
 end
 
@@ -52,6 +47,16 @@ function scene:create( event )
     local instructionText4 = display.newText("he is very susceptible to flash      ", display.contentCenterX, display.contentCenterY-105)
     local instructionText5 = display.newText("photography! ", display.contentCenterX, display.contentCenterY-90)
     
+    -- Displaying voltorb image
+    local voltorb = display.newImage("images/voltorb.png")
+    voltorb.width = 150
+    voltorb.height = 150
+
+    -- Display X image over the voltorb
+    local xImage = display.newImage("images/x.png")
+    xImage.width = 150
+    xImage.height = 150
+
     -- Creating a button widget, this button returns us to the menu
     local returnButton = widget.newButton({    
         id = "returnButton",
@@ -66,13 +71,19 @@ function scene:create( event )
     -- Positioning all objects on the scene
     returnButton.x = display.contentCenterX
     returnButton.y = display.contentCenterY+(display.contentCenterY/1.5)
+    voltorb.x = display.contentCenterX
+    voltorb.y = display.contentCenterY+(display.contentCenterY/5.0)
+    xImage.x = display.contentCenterX
+    xImage.y = display.contentCenterY+(display.contentCenterY/5.0)
 
     -- Adding all objects to the scene group
     sceneGroup:insert(instructionText1)
     sceneGroup:insert(instructionText2)
     sceneGroup:insert(instructionText3)
     sceneGroup:insert(instructionText4)
-    sceneGroup:insert(instructionText5)
+    sceneGroup:insert(instructionText5)    
+    sceneGroup:insert(voltorb)
+    sceneGroup:insert(xImage)
     sceneGroup:insert(returnButton)
 end
 
@@ -81,7 +92,7 @@ end
 --      input: none
 --      output: none
 --
---      This function destroys the game scenes when its swapped to
+--      This function does nothing for us, but is still part of Corona SDK scene creation requirements
 function scene:show( event )
 
     local sceneGroup = self.view

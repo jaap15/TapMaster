@@ -14,10 +14,19 @@ local widget = require("widget")
 local secondsLeft = 4
 
 -- Global Variables
+-- delayTime between minValue and maxValue
 delayTime = 0
+
+-- Tracks number of correct taps, displayed on top of scene
 correctTaps = 0
+
+-- Tracks number of incorrect taps, displayed on top of scene
 incorrectTaps = 0
+
+-- Tracks reaction time when we're in the "blue" box scene
 reactionTimes = {}
+
+-- Tallies all reactionTimes together and averages them, displayed on top of scene
 avgReactionTime = 0;
 
 -- -----------------------------------------------------------------------------------
@@ -141,7 +150,7 @@ end
 --      output: none
 --
 --      This function creates all the objects that will be used in the scene and adds
---      them to the scene group.
+--      them to the scene group. It also loads all the sound files that we will be using.
 function scene:create( event )
 
     sceneGroup = self.view
@@ -153,6 +162,9 @@ function scene:create( event )
 
     -- Loading Camera sound audio
     cameraSound = audio.loadStream( "sounds/camera.mp3" )
+
+    -- Loading explode sound audio
+    explode = audio.loadStream( "sounds/explode.mp3")
 
     -- This is the text that represents the score to the player
     scoreText = display.newText(" ", 0, 0, native.systemFont)

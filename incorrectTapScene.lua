@@ -34,9 +34,9 @@ local cameraOverlay = display.newImage("images/camera.png")
 --      output: none
 --
 --      This function is associated with the event listener "tap". If the tapImage 
---      object is tapped (this is the red box scene), the incorrectTaps is incremented,
+--      object is tapped (this is the "red" box scene), the incorrectTaps is incremented,
 --      we update the scoreboard, and push into the next scene. It also produces the 
---      camera snap sound.
+--      camera snap sound and explode sound (since its an incorrectTap).
 local function tapped()
     audio.play(cameraSound, {loops = 0})
     audio.play(explode, {loops = 0})
@@ -53,7 +53,7 @@ end
 --      output: none
 --
 --      This function is called two seconds after the box is generated. If the box has
---      not been tapped (this is the red box scene), the correctTaps is incremented,
+--      not been tapped (this is the "red" box scene), the correctTaps is incremented,
 --      we update the scoreboard, and push into the next scene.
 local function timedOut( )
     is2SecondsUp = true;
@@ -68,9 +68,10 @@ end
 --      input: none
 --      output: none
 --
---      This function generates the red box and applies a "tap" event listener to it.
+--      This function generates the "red" box and applies a "tap" event listener to it.
 --      It also calls the timedOut() function in 2 seconds. The tapped() and timedOut()
---      events add all functionality to the boxes.      
+--      events add all functionality to the boxes. It also makes sure the cameraOverlay is
+--      above the boxes.     
 function generateIncorrectTap()
     tapImage:addEventListener( "tap", tapped)
     tapImage.isVisible = true;
@@ -128,6 +129,8 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
+        
+        -- How long till the next box appears?
         generateDelay()
 
         -- Resetting local variables
@@ -136,6 +139,8 @@ function scene:show( event )
         is2SecondsUp = false;
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
+
+        -- generate box after delayTime
         timer.performWithDelay( delayTime, generateIncorrectTap, 1)
 
     end

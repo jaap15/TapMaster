@@ -14,7 +14,7 @@ local widget = require("widget")
 local secondsLeft = 4
 
 -- Global Variables
--- delayTime between minValue and maxValue
+-- delayTime will be used as a random integer between minValue and maxValue
 delayTime = 0
 
 -- Tracks number of correct taps, displayed on top of scene
@@ -38,7 +38,7 @@ avgReactionTime = 0;
 --      input: none
 --      output: none
 --
---      This function just switches us back to the menu scene
+--      This function just switches us back to the menu scene, associated with native.alert
 function exitToMenu(event)
     composer.gotoScene("menu")
 end
@@ -49,7 +49,7 @@ end
 --
 --      This global function checks to see how many rounds have been completed. If we have completed
 --      10 rounds, we show the player his results and reset the global variables. If not, we move
---      onto the next nameOfScene.
+--      onto the next scene (nameOfScene).
 function checkRoundsComplete(nameOfScene)
     if(correctTaps + incorrectTaps == 10) then
         native.showAlert("Congratulations!", string.format("CorrectTaps %01d \n IncorrectTaps %01d \n AvgResponseTime: %01d", correctTaps, incorrectTaps, avgReactionTime), {"Exit to Menu"}, exitToMenu)
@@ -65,7 +65,7 @@ end
 --      input: none
 --      output: none
 --
---      This global function updated the score board shown at the top of the game scene. It is 
+--      This global function updats the score board shown at the top of the game scene. It is 
 --      updated with simple string.format functionality.
 function updateScoreBoard()
     scoreText.text = string.format("CorrectTaps: %01d  IncorrectTaps: %01d\nAvgCorrectTapResponse: %01d Ms", correctTaps, incorrectTaps, avgReactionTime)
@@ -102,18 +102,6 @@ function startGame()
 
 end
 
--- returnButtonEvent()
---      input: none
---      output: none
---
---      This function just switches from the menu scene to the game scene
-local function returnButtonEvent(event)
-    if ("ended" == event.phase) then
-        composer.gotoScene("game")
-    end
-end
-
-
 -- updateTime()
 --      input: none
 --      output: none
@@ -122,8 +110,11 @@ end
 --      the text in the middle of the scene when secondsLeft is above 0. When there is no time left
 --      we start the game by calling startGame().
 function updateTime()
+
+    -- If countdown timer is still running decrement countdown timer and display it
+    -- else remove the timer and startGame()
     if (secondsLeft > 0) then
-        secondsLeft = secondsLeft - 1
+        secondsLeft = secondsLeft - 1 
         timeDisplay = string.format("%01d", secondsLeft)
         timerText.text = timeDisplay
     else
@@ -137,6 +128,7 @@ end
 --      output: none
 --
 --      This global function generates a random delay between global variables minValue and maxValue
+--      It is called everytime we begin generating the next box.
 function generateDelay()
     delayTime = math.random( minValue, maxValue)
 end

@@ -58,7 +58,7 @@ end
 --      This function is linked to the minimum interval slider and will update the 
 --		minValue variable as well as the text displaying the value of minValue
 local function minValueListener(event)
-	minValue = (5000 * (event.value)/100) + 500 
+	minValue = (5000 * (event.value)/100) + 500 -- lowest value is 500, max is 5500
     minText.text = "Min Interval : "..minValue
 end
 
@@ -69,7 +69,7 @@ end
 --      This function is linked to the maximum interval slider and will update the 
 --		maxValue variable as well as the text displaying the value of maxValue
 local function maxValueListener(event)
-	maxValue = (5000 * (event.value)/100) + 500
+	maxValue = (5000 * (event.value)/100) + 500 -- lowest value is 500, max is 5500
     maxText.text = "Max Interval : "..maxValue
 end
 
@@ -81,15 +81,18 @@ end
 -- 		alter the default values of the game. It also warns the user of illegal values
 -- 		when minValue is greater than maxValue.
 local function settingsUpdater(event)
+	
+	-- If "Default Values" radio button is checked
 	if (radioButton1.isOn) then
 		minValue = 500
-		minSlider:setValue(0)
+		minSlider:setValue(0) -- adjusting slider
 	    minText.text = "Min Interval : "..minValue
 		maxValue = 5000
-		maxSlider:setValue(100)
+		maxSlider:setValue(90) -- adjusting slider, max value is 5500, not 5000
 	    maxText.text = "Max Interval : "..maxValue
 	end
 
+	-- Actively checking for illegal values
 	if (minValue > maxValue) then
 		errText.text = "Warning: Min interval cannot\n exceed Max interval"
 	else

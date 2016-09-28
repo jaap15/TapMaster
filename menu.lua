@@ -45,7 +45,7 @@ end
 --      input: none
 --      output: none
 --      
---      This function just switches from the menu scene to the settings scene
+--      This function just switches from the menu scene to the help scene
 local function helpButtonEvent(event)
     if ("ended" == event.phase) then
         composer.gotoScene("help")
@@ -76,7 +76,7 @@ function scene:create( event )
     local menuBG = display.newImage("images/menuBG.jpg")
     menuBG.width = display.contentWidth
     menuBG.height = display.pixelWidth    
-    menuBG:setFillColor(1,1,1,0.5)
+    menuBG:setFillColor(1,1,1,0.5) -- adding transparency
 
     -- Text to display developers of the game
     authors = display.newText("by Daniel Burris and Jairo Arreola", display.contentCenterX, display.contentCenterY+(display.contentCenterY/1.2))
@@ -114,7 +114,7 @@ function scene:create( event )
             onEvent = helpButtonEvent 
         } )  
 
-    -- Positioning all objects on the scene
+    -- Positioning all objects on the screen
     menuTitle.x = display.contentCenterX
     menuTitle.y = display.contentCenterY-(display.contentCenterY*0.75)
     menuBG.x = display.contentCenterX
@@ -128,9 +128,12 @@ function scene:create( event )
     settingsButton.x = display.contentCenterX+70.0
     settingsButton.y = display.contentCenterY+(display.contentCenterY/1.5)
 
+    -- The background is loaded in the menu scene, but used in all scenes. So it is not added to the
+    -- sceneGroup, but is sent to the back so that it doesn't overlay anything.
+    menuBG:toBack()
+
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
-    menuBG:toBack()
     sceneGroup:insert( menuTitle )
     sceneGroup:insert( authors )
     sceneGroup:insert( startButton )
@@ -143,7 +146,7 @@ end
 --      input: none
 --      output: none
 --
---      This function destroys the game scenes when its swapped to
+--      This function destroys the game scenes when its swapped to the menu scene
 function scene:show( event )
 
     local sceneGroup = self.view

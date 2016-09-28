@@ -68,7 +68,7 @@ end
 --      output: none
 --
 --      This function is associated with the event listener "tap". If the tapImage 
---      object is tapped (this is the blue box scene), the correctTaps is incremented,
+--      object is tapped (this is the "blue" box scene), the correctTaps is incremented,
 --      we update the scoreboard, and push into the next scene. We also calculate the
 --      reactionTimer from the player. It also produces the camera snap sound.
 local function tapped()
@@ -89,7 +89,7 @@ end
 --      output: none
 --
 --      This function is called two seconds after the box is generated. If the box has
---      not been tapped (this is the blue box scene), the incorrectTaps is incremented,
+--      not been tapped (this is the "blue" box scene), the incorrectTaps is incremented,
 --      we update the scoreboard, and push into the next scene.
 local function timedOut( )
     is2SecondsUp = true;
@@ -104,7 +104,7 @@ end
 --      input: none
 --      output: none
 --
---      This function generates the blue box and applies a "tap" event listener to it.
+--      This function generates the "blue" box and applies a "tap" event listener to it.
 --      It also calls the timedOut() function in 2 seconds. The tapped() and timedOut()
 --      events add all functionality to the boxes. It also resumes the reactionTimer 
 --      because the blue box is now "tap"-able     
@@ -125,7 +125,7 @@ end
 --      input: none
 --      output: none
 --
---      This function creates the tapImage and colors it blue and adds it to the sceneGroup.
+--      This function creates the "blue" tapImage and adds it to the sceneGroup.
 --      This box is not destroyed, rather it is hidden during scene swapping and has its
 --      event listener removed when it is hidden. Reaction timer is also defined here.
 function scene:create( event )
@@ -156,7 +156,7 @@ function scene:create( event )
     sceneGroup:insert( tapImage )
     sceneGroup:insert(cameraOverlay)
 
-    -- reactionTimer is defined, every millisecond it calls tickinMs(). The -1 parameter 
+    -- Declaring reactionTimer, every millisecond it calls tickinMs(). The -1 parameter 
     -- makes it loop forever. 
     reactionTimer = timer.performWithDelay( 1, tickInMs, -1)
 
@@ -170,7 +170,7 @@ end
 --      we have to display a new random pokemon. Everytime we swap to this scene after creation, we
 --      generate our Delay, make sure our tapImage is hidden, and all local variables are reset.
 --      After delayTime seconds, we generate our "blue" box. We also pause our reactionTimer because
---      the blue box is not visible yet. This also calculates what the next scene will be.
+--      the "blue" box is not visible yet. This also calculates what the next scene will be.
 function scene:show( event )
 
     local sceneGroup = self.view
@@ -178,6 +178,8 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
+        
+        -- How long till the next box appears?
         generateDelay()
 
         -- Getting rid of the last tapImage
@@ -212,6 +214,8 @@ function scene:show( event )
         timer.pause( reactionTimer );
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
+
+        -- generate box after delayTime
         timer.performWithDelay( delayTime, generateCorrectTap, 1)
 
     end

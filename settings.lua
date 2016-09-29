@@ -133,6 +133,12 @@ function scene:create( event )
 	maxText = display.newText("Max Interval: "..maxValue, 100, 150, native.sytemFont, 16)
 	minText = display.newText("Min Interval: "..minValue, 100, 100, native.sytemFont, 16)
 
+    -- Game Background
+    local menuBG = display.newImage("images/menuBG.jpg")
+    menuBG.width = display.contentWidth
+    menuBG.height = display.pixelWidth    
+    menuBG:setFillColor(1,1,1,0.5) -- adding transparency
+
 	-- Static Text acting as labels for the user 
 	local text1 = display.newText("Default Values", display.contentCenterX-display.contentWidth*0.25, 0, native.systemFont, 16)
 	local text2 = display.newText("Custom Values", display.contentCenterX+display.contentWidth*0.25, 0, native.systemFont, 16)
@@ -212,8 +218,11 @@ function scene:create( event )
 	-- Positioning all objects on the scene
     returnButton.x = display.contentCenterX
     returnButton.y = display.contentCenterY+(display.contentCenterY/1.5)
+    menuBG.x = display.contentCenterX
+    menuBG.y = display.contentCenterY  
 
     -- Adding all objects to the scene group
+    sceneGroup:insert( menuBG )
     sceneGroup:insert(returnButton)
     sceneGroup:insert(minSlider)
     sceneGroup:insert(maxSlider)

@@ -52,6 +52,12 @@ function scene:create( event )
     voltorb.width = 150
     voltorb.height = 150
 
+    -- Game Background
+    local menuBG = display.newImage("images/menuBG.jpg")
+    menuBG.width = display.contentWidth
+    menuBG.height = display.pixelWidth    
+    menuBG:setFillColor(1,1,1,0.5) -- adding transparency
+
     -- Display X image over the voltorb
     local xImage = display.newImage("images/x.png")
     xImage.width = 150
@@ -75,8 +81,11 @@ function scene:create( event )
     voltorb.y = display.contentCenterY+(display.contentCenterY/5.0)
     xImage.x = display.contentCenterX
     xImage.y = display.contentCenterY+(display.contentCenterY/5.0)
+    menuBG.x = display.contentCenterX
+    menuBG.y = display.contentCenterY  
 
     -- Adding all objects to the scene group
+    sceneGroup:insert(menuBG)
     sceneGroup:insert(instructionText1)
     sceneGroup:insert(instructionText2)
     sceneGroup:insert(instructionText3)

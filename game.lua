@@ -162,6 +162,16 @@ function scene:create( event )
     scoreText = display.newText(" ", 0, 0, native.systemFont)
     scoreText:setTextColor(235, 235, 235)
 
+    -- Game Background
+    local menuBG = display.newImage("images/menuBG.jpg")
+    menuBG.width = display.contentWidth
+    menuBG.height = display.pixelWidth    
+    menuBG:setFillColor(1,1,1,0.5) -- adding transparency
+
+    -- Positioning menuBG object on the screen
+    menuBG.x = display.contentCenterX
+    menuBG.y = display.contentCenterY 
+
     -- Creating a button widget, this begins the countdown timer that launches the user
     -- into the game
     readyButton = widget.newButton({    
@@ -183,6 +193,7 @@ function scene:create( event )
     readyButton.y = display.contentCenterY
 
     -- Adding all objects to the scene group
+    sceneGroup:insert( menuBG )
     sceneGroup:insert( timerText )
     sceneGroup:insert( readyButton )
 end

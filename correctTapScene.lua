@@ -38,6 +38,15 @@ local nextScene
 -- Displaying camera overlay
 local cameraOverlay = display.newImage("images/camera.png")
 
+-- Used to hold to number of pokemon images we have so far
+local allPokemon = 14;
+
+-- Table used to hold all the pokemons that can be choosen
+local pokemonTable = {};
+
+-- Used as a counter to keep track of the index of the pokemon table
+local counter = 0;
+
 -- calcReactionTime()
 --      input: none
 --      output: none
@@ -109,6 +118,8 @@ end
 --      events add all functionality to the boxes. It also resumes the reactionTimer 
 --      because the blue box is now "tap"-able     
 local function generateCorrectTap()
+    --Playing the sprite
+    tapImage:play()
     Time = 0;
     timer.resume( reactionTimer )
     tapImage:addEventListener( "tap", tapped)
@@ -137,12 +148,6 @@ function scene:create( event )
     cameraOverlay.width = 300
     cameraOverlay.height = 300
 
-    -- Creating a table of pokemon for display
-    allPokemon = {}
-    for i = 1, 12 do -- Only had time to implement (download) 12 250x250 pokemon images
-        allPokemon[i] = i
-    end
-
     -- Displaying inital pokemon to be captured, he isn't actually visible, its just a placeholder
     tapImage = display.newImage("images/pokemon/1.png")
 
@@ -152,7 +157,44 @@ function scene:create( event )
     tapImage.x = display.contentCenterX
     tapImage.y = display.contentCenterY
 
+    -- Game Background
+    local menuBG = display.newImage("images/bk1.png", true)
+    menuBG.xScale = (1* menuBG.contentWidth)/menuBG.contentWidth
+    menuBG.yScale = menuBG.xScale * 1.2
+    -- Positioning menuBG object on the screen
+    menuBG.x = display.contentWidth/2
+    menuBG.y = display.contentHeight/2
+    
+    --Setting the image as background
+    menuBG:toBack()
+
+    --Creating a table of pokemon for display
+    for i = 1, allPokemon do
+        pokemonTable[i] = i;
+        print("Pokemons in pokemonTable: " .. i)
+    end
+
+    --Printing values of table for debugging
+    print("table not shuffled:")
+    table.foreach(pokemonTable, print)
+
+    --Used to shuffle pokemon table
+    local rand = math.random
+    local iterations = #pokemonTable
+    local j
+    
+    --Shuffling by iterating through table
+    for i = iterations, 2, -1 do
+        j = rand(i)
+        pokemonTable[i], pokemonTable[j] = pokemonTable[j], pokemonTable[i]
+    end
+
+    --Printing values of table for debugging
+    print("table shuffled:")
+    table.foreach(pokemonTable, print)
+
     -- Adding all objects to the scene group
+    sceneGroup:insert( menuBG )
     sceneGroup:insert( tapImage )
     sceneGroup:insert(cameraOverlay)
 
@@ -178,20 +220,33 @@ function scene:show( event )
 
     if ( phase == "will" ) then
         -- Code here runs when the scene is still off screen (but is about to come on screen)
-        
         -- How long till the next box appears?
         generateDelay()
 
         -- Getting rid of the last tapImage
         tapImage.isVisible = false;
 
-        -- Randomly selecting the next pokemon we'll find; could be the same one, could be any other
-        selectedPokemon = math.random(1, #allPokemon)
+        --Incrementing the index of the pokemon table counter
+        counter = counter + 1;
+        --Choosing the next pokemon from the shuffled table
+        local pokemonChosen = pokemonTable[counter]
+        print(pokemonChosen .. " choosen")
 
-        -- Displaying the new pokemon image and positioning it
-        tapImage = display.newImage("images/pokemon/" .. selectedPokemon .. ".png")
-        tapImage.x = display.contentCenterX
-        tapImage.y = display.contentCenterY
+        --Choosing the pokemon sprite sheet file that contains all the correct frames
+        local sheetName = require("images.pokemon.Pokemon" .. pokemonChosen)
+
+        --Getting the sprite sheet that contains all of the frames etc.
+        local spriteSheetData = sheetName:getSheet()
+        --Creating the image sheet
+        local pokemonSheet = graphics.newImageSheet( "images/pokemon/Pokemon" .. pokemonChosen ..".png", spriteSheetData)
+        --Getting the sequence data from the sprite sheet file
+        local sequenceData = sheetName:getSequence()
+        --Creating the sprite
+        tapImage = display.newSprite( pokemonSheet, sequenceData)
+
+        --Positioning the sprite
+        tapImage.x = display.contentWidth/2
+        tapImage.y = display.contentHeight/2
 
         -- Re-inserting it into the scene group since we declared it as newImage
         sceneGroup:insert( tapImage )

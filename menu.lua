@@ -128,12 +128,9 @@ function scene:create( event )
     settingsButton.x = display.contentCenterX+70.0
     settingsButton.y = display.contentCenterY+(display.contentCenterY/1.5)
 
-    -- The background is loaded in the menu scene, but used in all scenes. So it is not added to the
-    -- sceneGroup, but is sent to the back so that it doesn't overlay anything.
-    menuBG:toBack()
-
     -- Adding all objects to the scene group, this will bind these object to the scene
     -- and they will be removed / replaced when switching to and from scenes
+    sceneGroup:insert( menuBG )
     sceneGroup:insert( menuTitle )
     sceneGroup:insert( authors )
     sceneGroup:insert( startButton )

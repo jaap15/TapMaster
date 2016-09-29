@@ -73,6 +73,8 @@ end
 --      events add all functionality to the boxes. It also makes sure the cameraOverlay is
 --      above the boxes.     
 function generateIncorrectTap()
+    --Playing the sprite
+    tapImage:play()
     tapImage:addEventListener( "tap", tapped)
     tapImage.isVisible = true;
     cameraOverlay:toFront()
@@ -99,14 +101,40 @@ function scene:create( event )
     cameraOverlay.width = 300
     cameraOverlay.height = 300
 
-    -- Generating our voltorb image
-    tapImage = display.newImage("images/voltorb.png")
+    -- -- Generating our electrode sprite
+    --Choosing the pokemon sprite sheet file that contains all the correct frames
+    local sheetName = require("images.electrode")
+
+    --Getting the sprite sheet that contains all of the frames etc.
+    local spriteSheetData = sheetName:getSheet()
+    --Creating the image sheet
+    local pokemonSheet = graphics.newImageSheet( "images/electrode.png", spriteSheetData)
+    --Getting the sequence data from the sprite sheet file
+    local sequenceData = sheetName:getSequence()
+
+    --Creating the sprite
+    tapImage = display.newSprite( pokemonSheet, sequenceData)
+
+    --Positioning the sprite
+    tapImage.x = display.contentWidth/2
+    tapImage.y = display.contentHeight/2
 
     -- Positioning all objects on the scene
     cameraOverlay.x = display.contentCenterX
     cameraOverlay.y = display.contentCenterY
     tapImage.x = display.contentCenterX
     tapImage.y = display.contentCenterY
+
+    -- Game Background
+    local menuBG = display.newImage("images/bk1.png", true)
+    menuBG.xScale = (1* menuBG.contentWidth)/menuBG.contentWidth
+    menuBG.yScale = menuBG.xScale * 1.2
+    menuBG.x = display.contentWidth/2
+    menuBG.y = display.contentHeight/2
+
+    menuBG:toBack()
+
+    sceneGroup:insert( menuBG )
 
     -- Adding all objects to the scene group
     sceneGroup:insert( tapImage)

@@ -43,12 +43,12 @@ function scene:create( event )
     -- Displaying game instructions
     local instructionText1 = display.newText("Hello! The rules of the game are simple!", display.contentCenterX, display.contentCenterY-150)
     local instructionText2 = display.newText("The object  is to take as many pictures ", display.contentCenterX, display.contentCenterY-135)
-    local instructionText3 = display.newText("of pokemon as possible, except voltorb!", display.contentCenterX, display.contentCenterY-120)
+    local instructionText3 = display.newText("of pokemon as possible, except electrode!", display.contentCenterX, display.contentCenterY-120)
     local instructionText4 = display.newText("he is very susceptible to flash      ", display.contentCenterX, display.contentCenterY-105)
     local instructionText5 = display.newText("photography! ", display.contentCenterX, display.contentCenterY-90)
     
     -- Displaying voltorb image
-    local voltorb = display.newImage("images/voltorb.png")
+    local voltorb = display.newImage("images/electrode2.png")
     voltorb.width = 150
     voltorb.height = 150
 

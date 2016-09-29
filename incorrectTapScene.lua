@@ -42,7 +42,10 @@ local function tapped()
     audio.play(explode, {loops = 0})
     if(is2SecondsUp == false) then
         isTappedBefore = true;
+        --Adding it as a incorrect tap
         incorrectTaps = incorrectTaps + 1
+        --Moving to the next round
+        rounds = rounds + 1;
         updateScoreBoard()
         checkRoundsComplete("correctTapScene")
     end
@@ -53,12 +56,13 @@ end
 --      output: none
 --
 --      This function is called two seconds after the box is generated. If the box has
---      not been tapped (this is the "red" box scene), the correctTaps is incremented,
+--      not been tapped (this is the "red" box scene),
 --      we update the scoreboard, and push into the next scene.
 local function timedOut( )
     is2SecondsUp = true;
     if(not isTappedBefore) then
-        correctTaps = correctTaps + 1
+        --Moving to the next round
+        rounds = rounds + 1;
         updateScoreBoard()
         checkRoundsComplete("correctTapScene")
     end
@@ -75,9 +79,13 @@ end
 function generateIncorrectTap()
     --Playing the sprite
     tapImage:play()
+    -- Event listner for tap
     tapImage:addEventListener( "tap", tapped)
+    -- Setting the sprite as visible
     tapImage.isVisible = true;
     cameraOverlay:toFront()
+
+    --Will be called if not tapped in 2 seconds
     Timer2Seconds = timer.performWithDelay( 2000, timedOut, 1)
 end
 
@@ -129,14 +137,16 @@ function scene:create( event )
     local menuBG = display.newImage("images/bk1.png", true)
     menuBG.xScale = (1* menuBG.contentWidth)/menuBG.contentWidth
     menuBG.yScale = menuBG.xScale * 1.2
+
+    -- Positioning menuBG object on the screen
     menuBG.x = display.contentWidth/2
     menuBG.y = display.contentHeight/2
 
+    --Setting the image as background
     menuBG:toBack()
 
-    sceneGroup:insert( menuBG )
-
     -- Adding all objects to the scene group
+    sceneGroup:insert( menuBG )
     sceneGroup:insert( tapImage)
     sceneGroup:insert(cameraOverlay)
 end

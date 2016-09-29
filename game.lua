@@ -17,6 +17,9 @@ local secondsLeft = 4
 -- delayTime will be used as a random integer between minValue and maxValue
 delayTime = 0
 
+-- Tracks number of rounds, displayed on top of scene
+rounds = 1;
+
 -- Tracks number of correct taps, displayed on top of scene
 correctTaps = 0
 
@@ -51,10 +54,11 @@ end
 --      10 rounds, we show the player his results and reset the global variables. If not, we move
 --      onto the next scene (nameOfScene).
 function checkRoundsComplete(nameOfScene)
-    if(correctTaps + incorrectTaps == 10) then
-        native.showAlert("Congratulations!", string.format("CorrectTaps %01d \n IncorrectTaps %01d \n AvgResponseTime: %01d", correctTaps, incorrectTaps, avgReactionTime), {"Exit to Menu"}, exitToMenu)
+    if(rounds == 11) then
+        native.showAlert("Congratulations!", string.format("CorrectTaps %01d \n IncorrectTaps %01d \n AvgResponseTime: %01d Ms", correctTaps, incorrectTaps, avgReactionTime), {"Exit to Menu"}, exitToMenu)
         correctTaps = 0
         incorrectTaps = 0
+        rounds = 0
         scoreText.text = " "
     else
         composer.gotoScene(nameOfScene)
@@ -68,7 +72,7 @@ end
 --      This global function updats the score board shown at the top of the game scene. It is 
 --      updated with simple string.format functionality.
 function updateScoreBoard()
-    scoreText.text = string.format("CorrectTaps: %01d  IncorrectTaps: %01d\nAvgCorrectTapResponse: %01d Ms", correctTaps, incorrectTaps, avgReactionTime)
+    scoreText.text = string.format("CorrectTaps: %01d  IncorrectTaps: %01d\nAvgCorrectTapResponse: %01d Ms\nRound %01d", correctTaps, incorrectTaps, avgReactionTime, rounds)
 end
 
 -- readyButtonEvent()
@@ -188,7 +192,7 @@ function scene:create( event )
     timerText.x = display.contentCenterX     
     timerText.y = display.contentCenterY
     scoreText.x = display.contentCenterX   
-    scoreText.y = display.contentCenterY-(display.contentCenterY*1.10)
+    scoreText.y = display.contentCenterY-(display.contentCenterY*0.99)
     readyButton.x = display.contentCenterX
     readyButton.y = display.contentCenterY
 

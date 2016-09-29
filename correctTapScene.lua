@@ -26,9 +26,6 @@ local is2SecondsUp = false
 -- This is used to determine the reactionTime
 local reactionTimer
 
--- This variable is incremented every millisecond
-local Time = 0
-
 -- This is our timer variable
 local Timer2Seconds
 
@@ -47,6 +44,12 @@ local pokemonTable = {};
 -- Used as a counter to keep track of the index of the pokemon table
 local counter = 0;
 
+-- Used to store the start time
+local startTime;
+
+-- Used to store the stop time
+local stopTime;
+
 -- calcReactionTime()
 --      input: none
 --      output: none
@@ -62,16 +65,6 @@ local function calcReactionTime()
     avgReactionTime = avgReactionTime/correctTaps;
 end
 
--- tickInMs()
---      input: none
---      output: none
---
---      This function is called every millisecond and updates our time variable by
---      1 millisecond.
-local function tickInMs()
-    Time = Time + 1;
-end
-
 -- tapped()
 --      input: none
 --      output: none
@@ -83,10 +76,17 @@ end
 local function tapped()
     audio.play(cameraSound, {loops = 0})
     if(is2SecondsUp == false) then
-        timer.pause( reactionTimer )
+        --Stopping the timer
+        stopTime = system.getTimer()
+
         isTappedBefore = true;
+        --Adding it as a correct tap
         correctTaps = correctTaps + 1
-        reactionTimes[correctTaps] = Time
+        --Moving to the next round
+        rounds = rounds + 1
+        --Calc reaction time
+        reactionTimes[correctTaps] = stopTime - startTime
+        --Calling functions
         updateScoreBoard()
         calcReactionTime()
         checkRoundsComplete(nextScene)
@@ -104,6 +104,8 @@ local function timedOut( )
     is2SecondsUp = true;
     if(isTappedBefore == false) then
         incorrectTaps = incorrectTaps + 1
+        --Moving to the next round
+        rounds = rounds + 1;
         updateScoreBoard()
         checkRoundsComplete(nextScene)
     end
@@ -115,16 +117,20 @@ end
 --
 --      This function generates the "blue" box and applies a "tap" event listener to it.
 --      It also calls the timedOut() function in 2 seconds. The tapped() and timedOut()
---      events add all functionality to the boxes. It also resumes the reactionTimer 
---      because the blue box is now "tap"-able     
+--      events add all functionality to the boxes. It also starts the timer for reaction time 
+--      because the blue box is now "tap"-able and starts the timer for timeout of 2 seconds
 local function generateCorrectTap()
     --Playing the sprite
     tapImage:play()
-    Time = 0;
-    timer.resume( reactionTimer )
+    -- Starting timer to see how long will be the reaction
+    startTime = system.getTimer( )
+    -- Event listner for tap
     tapImage:addEventListener( "tap", tapped)
+    -- Setting the sprite as visible
     tapImage.isVisible = true;
     cameraOverlay:toFront()
+
+    --Will be called if not tapped in 2 seconds
     Timer2Seconds = timer.performWithDelay( 2000, timedOut, 1)
 end
 
@@ -164,7 +170,7 @@ function scene:create( event )
     -- Positioning menuBG object on the screen
     menuBG.x = display.contentWidth/2
     menuBG.y = display.contentHeight/2
-    
+
     --Setting the image as background
     menuBG:toBack()
 
@@ -198,10 +204,6 @@ function scene:create( event )
     sceneGroup:insert( tapImage )
     sceneGroup:insert(cameraOverlay)
 
-    -- Declaring reactionTimer, every millisecond it calls tickinMs(). The -1 parameter 
-    -- makes it loop forever. 
-    reactionTimer = timer.performWithDelay( 1, tickInMs, -1)
-
 end
 
 -- show()
@@ -211,8 +213,7 @@ end
 --      This function is called when we swap to this scene. We have to recreate the tapImage because
 --      we have to display a new random pokemon. Everytime we swap to this scene after creation, we
 --      generate our Delay, make sure our tapImage is hidden, and all local variables are reset.
---      After delayTime seconds, we generate our "blue" box. We also pause our reactionTimer because
---      the "blue" box is not visible yet. This also calculates what the next scene will be.
+--      After delayTime seconds, we generate our "blue" box. This also calculates what the next scene will be.
 function scene:show( event )
 
     local sceneGroup = self.view
@@ -265,8 +266,6 @@ function scene:show( event )
         isTappedBefore = false;
         is2SecondsUp = false;
 
-        -- Pausing timer since we haven't shown the box yet
-        timer.pause( reactionTimer );
     elseif ( phase == "did" ) then
         -- Code here runs when the scene is entirely on screen
 
@@ -293,8 +292,9 @@ function scene:hide( event )
 
     elseif ( phase == "did" ) then
         -- Code here runs immediately after the scene goes entirely off screen
-        -- composer.removeScene("correctTapScene")
+        -- Removes the event listener
         tapImage:removeEventListener( "tap", tapped)
+        -- Cancels the timer
         timer.cancel( Timer2Seconds )
     end
 end

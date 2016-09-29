@@ -1,3 +1,10 @@
+-----------------------------------------------------------------------------------------
+--
+-- Pokemon12.lua
+--
+-- Authors: Daniel Burris and Jairo Arreola
+-- This file was generated using the TexturePacker software when creating the sprite sheet 
+-----------------------------------------------------------------------------------------
 --
 -- created with TexturePacker (http://www.codeandweb.com/texturepacker)
 --
